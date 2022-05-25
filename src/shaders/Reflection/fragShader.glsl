@@ -198,7 +198,8 @@ void main() {
     if(mipLevel >= 6.){
     // mip2
     lowerMip = cu6;
-    upperMip = pow(cu7,vec3(1./(1.+fracMip*0.3)))+fracMip*0.035*0.;
+    // upperMip = pow(cu7,vec3(1./(1.+fracMip*0.3)))+fracMip*0.035*0.;
+    upperMip = cu7;
   }
 
   col = mix(lowerMip,upperMip, fracMip);
