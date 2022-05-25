@@ -37,6 +37,7 @@ export class Setup {
         //ORBIT CONTROL SETUP
 
         const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableRotate = false;
         controls.update();
 
         // Add to instance

@@ -30,11 +30,13 @@ import bakeFrag from "./shaders/Bake/fragShader.glsl"
 var {scene,renderer} = {...setup};
 
 var sphereGeometry = new THREE.SphereGeometry(1,100.,100.);
+sphereGeometry.computeTangents();
 var planeGeometry = new THREE.PlaneGeometry(1,1,100,100);
 
 function createSphere(material){
     var mesh = new THREE.Mesh(sphereGeometry,material);
     mesh.scale.set(5,5,5);
+    
 
     mesh.visible = false;
     scene.add(mesh);
@@ -168,12 +170,14 @@ var reflectionMesh = createSphere(reflectionMaterial);
 var reflectionNMaterial = createMaterial(reflectionNVert,reflectionNFrag,reflectionNUniforms);
 var reflectionNMesh = createSphere(reflectionNMaterial);
 
-// reflectionNMesh.visible = true;
+console.log("reflN",reflectionNMesh);
+
+reflectionNMesh.visible = true;
 
 var fresnelMaterial = createMaterial(fresnelVert, fresnelFrag, fresnelUniforms);
 var fresnelMesh = createSphere(fresnelMaterial);
 
-fresnelMesh.visible = true;
+// fresnelMesh.visible = true;
 
 
 
@@ -224,7 +228,7 @@ guiReflection.add(reflectionMesh, "visible");
 guiReflection.add(reflectionMaterial.uniforms.gloss, "value", 0., 1., 0.001).name("gloss");
 
 var guiReflectionN = gui.addFolder("ReflectionN");
-// guiReflectionN.open();
+guiReflectionN.open();
 guiReflectionN.add(reflectionNMesh, "visible");
 guiReflectionN.add(reflectionNMaterial.uniforms.tiling.value, "x", 0., 20., 0.1).name("Tiling X");
 guiReflectionN.add(reflectionNMaterial.uniforms.tiling.value, "y", 0., 20., 0.1).name("Tiling Y");
@@ -235,7 +239,7 @@ guiReflectionN.add(reflectionNMaterial.uniforms.gloss, "value", 0., 1., 0.001).n
 
 
 var guiFresnel = gui.addFolder("Fresnel");
-guiFresnel.open();
+// guiFresnel.open();
 guiFresnel.add(fresnelMesh, "visible");
 guiFresnel.add(fresnelMaterial.uniforms.IOR, "value", 0., 10., 0.001).name("IOR");
 guiFresnel.add(fresnelMaterial.uniforms.facing, "value", 0., 1., 0.001).name("FACING");
@@ -265,7 +269,7 @@ function loadMip(url, url2, material, material2) {
         material.uniforms["cube" + url].value = cubeTex;
         material2.uniforms["cube" + url].value = cubeTex;
 
-        // console.log("mip", texture, cubeTex); 
+        console.log("mip", texture, cubeTex); 
         material.uniforms["tex" + url].value = texture;
         material2.uniforms["tex" + url].value = texture;
     });
@@ -278,6 +282,12 @@ for (var i = 0; i < 8; i++) {
 //Load for ReflectionN - normalMap
 
 textureLoader.load("./orange_peel.jpg", function(texture){
+    // console.log("orangepeel", texture);
+    // console.log("linearFilter", THREE.LinearFilter);
+    // console.log("nearestFilter", THREE.NearestFilter);
+    // console.log("NearestMipmapnearestfilter", THREE.NearestMipmapNearestFilter);
+
+    texture.minFilter = THREE.LinearFilter;
     reflectionNMaterial.uniforms.normTex.value = texture;
 });
 
@@ -285,6 +295,13 @@ textureLoader.load("./orange_peel.jpg", function(texture){
 //Load for Diffuse and DiffuseMMVG - diffuseMap png
 
 textureLoader.load("./diffuse.png",function(texture){
+    // texture.minFilter = THREE.LinearFilter;
+    // console.log(texture);
+    // texture.minFilter = THREE.NearestMipmapLinearFilter;
+    // texture.minFilter = THREE.NearestMipmapNearestFilter;
+    // texture.minFilter = THREE.LinearMipmapNearestFilter;
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    // texture.minFilter = THREE.NearestFilter;
     diffuseMesh.material.uniforms.tex.value = texture;
     diffuseMMVGMesh.material.uniforms.tex.value = texture;
 });
@@ -292,6 +309,14 @@ textureLoader.load("./diffuse.png",function(texture){
 // //Load for Bake - bakeMap exr could be tiff or hdr
 
 rgbeLoader.load("./bake.hdr", function (texture){
+    // texture.minFilter = THREE.LinearFilter;
+    // console.log(texture);
+    // texture.minFilter = THREE.NearestMipmapLinearFilter;
+    // texture.minFilter = THREE.NearestMipmapNearestFilter;
+    // texture.minFilter = THREE.LinearMipmapNearestFilter;
+    // texture.minFilter = THREE.LinearMipmapLinearFilter;
+    // texture.minFilter = THREE.NearestFilter;
+    console.log("bake",texture);
     bakeMesh.material.uniforms.tex.value = texture;
 });
 

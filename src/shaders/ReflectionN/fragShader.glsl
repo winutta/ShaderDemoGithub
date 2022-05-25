@@ -30,6 +30,8 @@ uniform vec2 tiling;
 uniform vec2 offset;
 uniform sampler2D normTex;
 
+varying vec3 tang;
+
 
 
 #define PI 3.14159265358979
@@ -64,22 +66,21 @@ void main() {
 
   //Should I just use the pano instead and get uvs from refl?
 
-  vec2 normUV = fract(vUV*tiling + offset);
+  vec2 normUV = fract(vUV*tiling + offset); // this is causing bad lines.
   vec3 normalTex = texture2D(normTex,normUV).rgb;
   vec3 nNorm = normalTex;
-  nNorm = n;
 
-  // vec3 nNorm = (normalTex*2. - 1.);
-  // nNorm.z = sqrt(1.-clamp(dot(nNorm.xy,nNorm.xy),0.,1.));
-  // nNorm *= valueV;
-  // nNorm += n;
-  // nNorm = mix(nNorm,n,valueV);
-  // nNorm = normalize(nNorm);
+  // This seems to be right!
 
-  nNorm = (normalTex*2. - 1.)*valueV + n; //this is closest so far but still wrong, need to look at unity code more
-  nNorm = normalize(nNorm);
+  nNorm = (normalTex*2. - 1.);
+  nNorm.xy *= valueV;
+  nNorm.z = sqrt(1.-clamp(dot(nNorm.xy,nNorm.xy),0.,1.));
 
-  //why is it zooming in on the texture?
+  vec3 biTang = cross(n,tang);
+
+  vec3 wsNormal = tang*nNorm.x + biTang*nNorm.y + n*nNorm.z;
+
+  nNorm = wsNormal;
 
   vec3 viewDirection = (pos - cameraPosition);
 
@@ -223,7 +224,8 @@ void main() {
     if(mipLevel >= 6.){
     // mip2
     lowerMip = cu6;
-    upperMip = pow(cu7,vec3(1./(1.+fracMip*0.3)))+fracMip*0.035*0.;
+    // upperMip = pow(cu7,vec3(1./(1.+fracMip*0.3)))+fracMip*0.035*0.;
+    upperMip = cu7;
   }
 
   col = mix(lowerMip,upperMip, fracMip);
@@ -239,6 +241,8 @@ void main() {
 
   // col = cube.rgb;
   col = gamma(vec3(col));
+
+  // col = abs(tang);
   // col = pow(col,vec3(1./2.2));
 
   // col = refl;
