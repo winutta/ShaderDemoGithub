@@ -13,7 +13,7 @@ uniform vec2 offset;
 void main() {
   vec3 col = vec3(1.,0.,1.);
 
-  vec2 texUV = fract(vUV*tiling + offset);
+  vec2 texUV = vUV*tiling + offset;
 
   // vec4 exr = texture(tex,texUV,0.);
 

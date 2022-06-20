@@ -23,7 +23,14 @@ export class Setup {
 
         // RENDERER SETUP
         var targetCanvas = document.querySelector(".webgl");
-        var renderer = new THREE.WebGLRenderer({canvas: targetCanvas,antialias: true});
+        var renderer = new THREE.WebGLRenderer({canvas: targetCanvas,antialias: false});
+        // renderer.toneMapping = THREE.LinearToneMapping;
+        // renderer.toneMappingExposure = 1.;
+        // THREE.LinearEncoding
+        // THREE.sRGBEncoding
+        // renderer.outputEncoding = THREE.sRGBEncoding;
+        // renderer.outputEncoding = THREE.LinearEncoding;
+        console.log("renderer",renderer);
         // renderer.autoClear = true;
         renderer.autoClear = false;
 
@@ -37,7 +44,7 @@ export class Setup {
         //ORBIT CONTROL SETUP
 
         const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableRotate = false;
+        // controls.enableRotate = false;
         controls.update();
 
         // Add to instance

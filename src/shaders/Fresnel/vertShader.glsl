@@ -7,7 +7,8 @@ void main()
 {
 	vUV = uv;
 
-	n = normal;
+	// n = normal;
+	n = normalize(modelMatrix*vec4(normal,0.)).rgb;
 
 	vec3 offset = vec3(0.);
 
