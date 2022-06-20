@@ -104,8 +104,8 @@ void main() {
   vec4 hdr0 = texture2D(tex0,texUV).rgba;
   vec4 hdr1 = texture2D(tex1,texUV).rgba;
   vec4 hdr2 = texture2D(tex2,texUV).rgba;
-  vec4 hdr4 = texture2D(tex4,texUV).rgba;
   vec4 hdr3 = texture2D(tex3,texUV).rgba;
+  vec4 hdr4 = texture2D(tex4,texUV).rgba;
   vec4 hdr5 = texture2D(tex5,texUV).rgba;
   vec4 hdr6 = texture2D(tex6,texUV).rgba;
 
